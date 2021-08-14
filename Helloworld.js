@@ -8,6 +8,10 @@ class HelloWorld extends HTMLElement {
 
         shadow.append(contents.cloneNode(true));
     }
+
+    connectedCallback(){
+        console.log("DOM에 HelloWorld가 추가 되었습니다.");
+    }
 }
 
 customElements.define('hello-world', HelloWorld);
