@@ -18,10 +18,16 @@ export default class CompanyHeader extends HTMLElement{
                 <img class="icon" src=${this.icon}></img>
             </a>
             <h1 class="heading">${this.title}</h1>
+
+            <div>
+                <slot name="slot-test"></slot>
+            </div>
+
             <div>
                 <a class="header-links">home</a>
                 <a class="header-links">About Us</a>
             </div>
+
             <style>
             :host {
                 display: flex;
