@@ -98,4 +98,5 @@ export default class SearchContainer extends HTMLElement {
 
 };
 
-customElements.define('search-container', SearchContainer);
+
+customElements.get('search-container')?? customElements.define('search-container', SearchContainer);

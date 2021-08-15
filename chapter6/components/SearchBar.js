@@ -96,4 +96,5 @@ export default class SearchBar extends HTMLElement {
 
 };
 
-customElements.define('search-bar', SearchBar);
+
+customElements.get('search-bar')?? customElements.define('search-bar', SearchBar);

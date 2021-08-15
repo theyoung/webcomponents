@@ -1,5 +1,5 @@
 import SearchContainer from "./components/SearchContainer.js";
-
+import ShowTrending from "./components/ShowTrending.js";
 export default class MyApp extends HTMLElement {
     constructor(){
         super();
@@ -17,6 +17,7 @@ export default class MyApp extends HTMLElement {
     getTemplate(){
         return `
         <search-container></search-container>
+        <show-trending></show-trending>
         ${this.getStyle()}
         `;
     }
