@@ -50,7 +50,7 @@ export default class Store {
         this.status ='mutation';
         let newStat = this.mutations[mutationKey](this.state, payload);
 
-        this.state = Object.assign(this.state, newStat);
+        Object.assign(this.state, newStat);
         return true;
     }
 };

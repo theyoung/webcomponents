@@ -1,19 +1,24 @@
+import StoreInstance from "../statem/StoreInstance.js";
 export default class AppInput extends HTMLElement {
     constructor(){
         super();
-        this.items = new Array();
+        this.store = StoreInstance;
+        this.store.events.subscribe('stateChange',this.renderList.bind(this));
 
         this.render();
+        this.renderList();
     }
 
     render(){
+
         this.innerHTML = this.getTemplate();
     }
 
     getTemplate(){
         return `
             <h2 class="app__heading">What you've done</h2>
-            <div class="js-items" aria-live="polite" aria-label="A list of items you have done"></div>
+            <div class="js-items" aria-live="polite" aria-label="A list of items you have done">
+            </div>
             <form class="[ new-item ] [ boilerform ] [ js-form ]">
                 <div class="boilerform">
                     <!-- Form styles from the https://boilerform.design boilerplate -->
@@ -29,39 +34,34 @@ export default class AppInput extends HTMLElement {
         let that = this;
         this.querySelector('form').addEventListener('submit',(e)=> {
             e.preventDefault();
-            that.addItem();
+            that.addItemWithStore(); //for state management
         });
     }
     
-    addItem(){
-        let item = this.querySelector('#new-item-field').value.trim();
-        this.items.push(item);
-        this.dispatchItems();
-        this.renderList();
+    addItemWithStore(){
+        let item = this.querySelector('#new-item-field').value.trim();   
+        StoreInstance.dispatch("ADD_ITEM", item);
     }
 
     renderList(){
         let that = this;
-        this.querySelector('.js-items').innerHTML = `
+        const list = `
             <ul>
-                ${this.items.map((item,idx)=> `<li> ${item} <button class="rm" aria-label="Delete this item">×</button></li>`).join('')}
+                ${this.store.state.items.map((item,idx)=> `<li> ${item} <button class="rm" aria-label="Delete this item">×</button></li>`).join('')}
             </ul>
         `;
 
+        this.querySelector('.js-items').innerHTML = list;
+
         this.querySelectorAll('.rm').forEach((btn,idx)=>{
             btn.addEventListener('click',(e)=>{
-                that.items.splice(idx, 1);
-                that.renderList();
-                that.dispatchItems();
+                that.dispatchItemsWithStore(idx);
             });
         });
     }
 
-    dispatchItems(){
-        this.dispatchEvent(new CustomEvent('changed',{
-            detail : {data : this.items.length},
-            bubbles : true
-        }));
+    dispatchItemsWithStore(idx){
+        this.store.dispatch("DELETE_ITEM",idx);
     }
 
     disconnectedCallback(){

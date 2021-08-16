@@ -1,7 +1,11 @@
+import StoreInstance from "../statem/StoreInstance.js";
+
 export default class AppStatus extends HTMLElement {
     constructor(){
         super();
-        this.count = this.getAttribute('item-count');
+
+        this.store = StoreInstance;
+        this.store.events.subscribe('stateChange',this.render.bind(this));
 
         this.render();
     }
@@ -16,7 +20,7 @@ export default class AppStatus extends HTMLElement {
             <p role="status" class="visually-hidden">You have done <span class="js-status">1 thing</span> today!</p>
             <div class="[ app__decor ] [ js-count ]" aria-hidden="true">
                 <small>You've done</small>
-                <span>${this.count}</span>
+                <span>${this.store.state.items.length}</span>
                 <small>things today 😢</small>
             </div>
             </aside>
@@ -32,14 +36,14 @@ export default class AppStatus extends HTMLElement {
     }
 
     static get observedAttributes(){
-        return ['item-count'];
+        // return ['item-count'];
     }
 
     attributeChangedCallback(name, oldValue, newValue){
-        if(name = 'item-count'){
-            this.count = newValue;
-            this.render();
-        }
+        // if(name = 'item-count'){
+        //     this.count = newValue;
+        //     this.render();
+        // }
 
     }
 };
