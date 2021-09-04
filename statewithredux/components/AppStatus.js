@@ -4,7 +4,7 @@ export default class AppStatus extends HTMLElement {
     constructor(){
         super();
         // this.count = this.getAttribute('item-count');
-
+        this.subscribes = new Array();
         this.render();
     }
 
@@ -26,13 +26,17 @@ export default class AppStatus extends HTMLElement {
     }
 
     connectedCallback(){
-        Store.subscribe(()=>{
+        const unsubscribe = Store.subscribe(()=>{
             this.render();
         });
+
+        this.subscribes.push(unsubscribe);
     }
 
     disconnectedCallback(){
-
+        this.subscribes.forEach((unsubscribe)=>{
+            unsubscribe();
+        });
     }
 
     static get observedAttributes(){
@@ -44,7 +48,6 @@ export default class AppStatus extends HTMLElement {
             this.count = newValue;
             this.render();
         }
-
     }
 };
 

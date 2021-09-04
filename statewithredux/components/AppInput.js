@@ -5,6 +5,7 @@ export default class AppInput extends HTMLElement {
         super();
         // this.items = new Array();
         this.items = Store.getState()['todos'];
+        this.subscribes = new Array();
         this.render();
     }
 
@@ -35,10 +36,12 @@ export default class AppInput extends HTMLElement {
             that.addItem();
         });
 
-        Store.subscribe(()=> {
+        const unsub = Store.subscribe(()=> {
             this.items = Store.getState()['todos'];
             this.renderList();
         })
+
+        this.subscribes.push(unsub);
     }
     
     addItem(){
@@ -75,7 +78,9 @@ export default class AppInput extends HTMLElement {
     }
 
     disconnectedCallback(){
-
+        this.subscribes.forEach((unsubscribe)=>{
+            unsubscribe();
+        });
     }
 
     static get observedAttributes(){
